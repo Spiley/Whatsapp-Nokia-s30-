@@ -75,6 +75,10 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
     try {
         const chat = await client.getChatById(req.params.id);
         
+        if (chat.unreadCount > 0) {
+            await chat.sendSeen();
+        }
+        
         let msgs = [];
         try {
             msgs = await chat.fetchMessages({ limit: 10 });
@@ -93,15 +97,32 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
             html += `<i>Geen berichten.</i><br><br>`;
         }
 
-        msgs.forEach(m => {
+        for (let m of msgs) {
             const align = m.fromMe ? 'right' : 'left';
             const bg = m.fromMe ? '#dcf8c6' : '#ffffff';
+            
+            const date = new Date(m.timestamp * 1000);
+            const timeStr = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+
+            let senderHtml = '';
+            if (!m.fromMe && chat.isGroup) {
+                try {
+                    const contact = await m.getContact();
+                    const senderName = contact.name || contact.pushname || contact.number;
+                    senderHtml = `<div style="font-size:10px; color:#128C7E; font-weight:bold; margin-bottom:2px;">${senderName}</div>`;
+                } catch (e) {
+                    senderHtml = `<div style="font-size:10px; color:#128C7E; font-weight:bold; margin-bottom:2px;">Contact</div>`;
+                }
+            }
+
             html += `<div style="text-align:${align}; margin-bottom:5px;">
-                <span style="background:${bg}; border:1px solid #ccc; padding:3px;">
-                    ${m.body}
-                </span>
+                <div style="background:${bg}; border:1px solid #ccc; padding:4px; display:inline-block; text-align:left; max-width:90%;">
+                    ${senderHtml}
+                    <div style="font-size:12px;">${m.body}</div>
+                    <div style="font-size:9px; color:#888; text-align:right; margin-top:3px;">${timeStr}</div>
+                </div>
             </div>`;
-        });
+        }
 
         html += `</div><hr>
         <form action="/send" method="post" style="padding:4px;margin:0;">
