@@ -1,0 +1,11 @@
+{
+  "name": "nokia-whatsapp-gw",
+  "version": "1.0.0",
+  "dependencies": {
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js",
+    "qrcode-terminal": "^0.12.0",
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "express-session": "^1.17.3"
+  }
+}
