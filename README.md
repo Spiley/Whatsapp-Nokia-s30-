@@ -45,7 +45,7 @@ click start.sh
 
 ### Manual Setup
 
-Alternatively, you can run the Docker commands manually:
+Alternatively, you can run the commands manually:
 
 python run.py or python3 run.py
 
