@@ -32,8 +32,8 @@ Configuration
 
 Installation & Setup
 --------------------
-![Demo Video](setup.mp4)
-
+### setup
+[![Watch the video](https://img.youtube.com/vi/djEMivwf7oo/maxresdefault.jpg)](https://www.youtube.com/watch?v=djEMivwf7oo)
 ### Windows
 
 click start.bat 
