@@ -36,9 +36,9 @@ Installation & Setup
 
 click start.bat 
 
-### Windows
+### MacOS
 
-click start.bat 
+click start.sh 
 
 
 ### Manual Setup
