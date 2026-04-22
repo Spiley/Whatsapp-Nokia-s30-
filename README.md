@@ -33,10 +33,9 @@ Configuration
 -------------
 
 Before running the application, you must set up your environment variables.
-
-1.  Create a .env file in the root directory based on the .env.example template.
-    
-2.  Define the following variables:
+1.  Clone the repository using: ` git clone https://github.com/Spiley/Whatsapp-Dumbphone `
+2.  Create a .env file in the root directory based on the .env.example template.
+3.  Define the following variables:
     
     *   PASSWORD: The password required to log into the web gateway interface.
         
@@ -59,20 +58,18 @@ You can use the provided Python script to build the image and start the containe
 Alternatively, you can run the Docker commands manually:
 
 1.  docker build --no-cache -t nokia-wa .
-    
 2.  docker run -d --env-file .env -p 3000:3000 nokia-wa
+3.  docker logs -f \[CONTAINER\_ID\]
     
 
 Usage
 -----
-
-1.  docker logs -f \[CONTAINER\_ID\]  (if manual setup is used)
     
-2.  **Scan**: Scan the displayed QR code with your primary WhatsApp device.
+1.  **Scan**: Scan the displayed QR code with your primary WhatsApp device.
     
-3.  **Access**: Navigate to http://\[server-ip\]:3000 on your legacy device's browser.
+2.  **Access**: Navigate to http://\[server-ip\]:3000 on your legacy device's browser.
     
-4.  **Login**: Enter the PASSWORD defined in your .env file.
+3.  **Login**: Enter the PASSWORD defined in your .env file.
     
 
 **Important Note**: After the WhatsApp gateway is ready, wait approximately one minute before it works.
