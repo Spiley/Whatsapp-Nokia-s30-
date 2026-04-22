@@ -23,17 +23,38 @@ Features
 
 Prerequisites
 -------------
+<<<<<<< HEAD
 *   A VPS, homeserver, PC, or laptop that can run 24/7   
+=======
+
+*   Docker installed on the host machine.
+*   Python (for the optional deployment script).
+*   A VPS, homeserver, PC, or laptop that can run 24/7
+    
+>>>>>>> a8e34a954acedfaaeb020f07b9d97ca32f451181
 
 Configuration
 -------------
 
 Before running the application, you must set up your environment variables.
+<<<<<<< HEAD
 Clone the repository using: ` git clone https://github.com/Spiley/Whatsapp-Dumbphone `
+=======
+1.  Clone the repository using: ` git clone https://github.com/Spiley/Whatsapp-Dumbphone `
+2.  Create a .env file in the root directory based on the .env.example template.
+3.  Define the following variables:
+` 
+PASSWORD=secretpassword  
+SESSION_SECRET=randomid
+`     
+
+The project is configured to ignore the .env file in version control for security.
+>>>>>>> a8e34a954acedfaaeb020f07b9d97ca32f451181
 
 Installation & Setup
 --------------------
 
+<<<<<<< HEAD
 ### Windows
 
 click start.bat 
@@ -48,6 +69,21 @@ click start.bat
 Alternatively, you can run the Docker commands manually:
 
 python run.py or python3 run.py
+=======
+### Automatic Setup
+
+You can use the provided Python script to build the image and start the container automatically:
+
+`   python3 run.py   `
+
+### Manual Setup
+
+Alternatively if the QR is not showing up, you can run the Docker commands manually:
+
+1.  docker build --no-cache -t nokia-wa .
+2.  docker run -d --env-file .env -p 3000:3000 nokia-wa
+3.  docker logs -f \[CONTAINER\_ID\]
+>>>>>>> a8e34a954acedfaaeb020f07b9d97ca32f451181
     
 
 Usage
