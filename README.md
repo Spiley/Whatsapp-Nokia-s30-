@@ -24,8 +24,7 @@ Features
 Prerequisites
 -------------
 *   A VPS, homeserver, PC, or laptop that can run 24/7
-*   Node.js
-*   Python
+*   Docker
 
 Configuration
 -------------
@@ -37,18 +36,19 @@ Installation & Setup
 [![Watch the video](https://img.youtube.com/vi/djEMivwf7oo/maxresdefault.jpg)](https://www.youtube.com/watch?v=djEMivwf7oo)
 ### Windows
 
-click start.bat 
+run start.bat 
 
 ### MacOS/Linux
 
-click start.sh 
+run start.sh
 
 
 ### Manual Setup
 
 Alternatively, you can run the commands manually:
 
-python run.py or python3 run.py
+docker compose up -d --build
+docker compose logs -f
 
 
 Usage
@@ -61,7 +61,7 @@ Usage
 3.  **Login**: Enter the PASSWORD defined in your .env file.
     
 
-**Important Note**: After the WhatsApp gateway is ready, wait approximately one minute before it works.
+**Important Note**: After the WhatsApp gateway is ready, wait approximately one or two minute(s) before it works.
 
 Access
 -----

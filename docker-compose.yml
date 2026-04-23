@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  whatsapp-gateway:
+    build: .
+    container_name: whatsapp-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./session:/app/.wwebjs_auth
+    env_file:
+      - .env

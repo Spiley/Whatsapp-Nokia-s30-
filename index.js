@@ -1,5 +1,4 @@
 require('dotenv').config();
-const os = require('os');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const express = require('express');
@@ -8,11 +7,11 @@ const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
-const PASSWORD = process.env.PASSWORD; 
+const PASSWORD = process.env.PASSWORD || 'admin123'; 
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'fallback-secret-key',
     resave: false,
     saveUninitialized: true
 }));
@@ -47,7 +46,13 @@ app.post('/login', loginLimiter, (req, res) => {
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { 
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'] 
+        executablePath: '/usr/bin/chromium-browser', // Explicitly point to Alpine's Chromium
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox', 
+            '--disable-dev-shm-usage',
+            '--disable-gpu'
+        ] 
     }
 });
 
@@ -85,17 +90,10 @@ app.get('/', checkAuth, async (req, res) => {
 app.get('/chat/:id', checkAuth, async (req, res) => {
     try {
         const chat = await client.getChatById(req.params.id);
-        
-        if (chat.unreadCount > 0) {
-            await chat.sendSeen();
-        }
+        if (chat.unreadCount > 0) await chat.sendSeen();
         
         let msgs = [];
-        try {
-            msgs = await chat.fetchMessages({ limit: 10 });
-        } catch (msgErr) {
-            console.error(msgErr);
-        }
+        try { msgs = await chat.fetchMessages({ limit: 10 }); } catch (msgErr) { console.error(msgErr); }
 
         let html = `<html><head><meta name="viewport" content="width=240, initial-scale=1.0"></head>
         <body style="background:#eee;color:#000;font-family:sans-serif;margin:0;padding:0;">
@@ -104,14 +102,11 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
         </div>
         <div style="padding:4px;">`;
         
-        if (msgs.length === 0) {
-            html += `<i>No messages.</i><br><br>`;
-        }
+        if (msgs.length === 0) html += `<i>No messages.</i><br><br>`;
 
         for (let m of msgs) {
             const align = m.fromMe ? 'right' : 'left';
             const bg = m.fromMe ? '#dcf8c6' : '#ffffff';
-            
             const date = new Date(m.timestamp * 1000);
             const timeStr = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
 
@@ -121,9 +116,7 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
                     const contact = await m.getContact();
                     const senderName = contact.name || contact.pushname || contact.number;
                     senderHtml = `<div style="font-size:10px; color:#128C7E; font-weight:bold; margin-bottom:2px;">${senderName}</div>`;
-                } catch (e) {
-                    senderHtml = `<div style="font-size:10px; color:#128C7E; font-weight:bold; margin-bottom:2px;">Contact</div>`;
-                }
+                } catch (e) { senderHtml = `<div style="font-size:10px; color:#128C7E; font-weight:bold; margin-bottom:2px;">Contact</div>`; }
             }
 
             let mediaHtml = '';
@@ -134,7 +127,6 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
                 if (m.type === 'video') mediaType = "Video";
                 if (m.type === 'audio' || m.type === 'ptt') mediaType = "audio";
                 if (m.type === 'document') mediaType = "Document";
-                
                 mediaHtml = `<div style="font-size:11px; color:#555; font-style:italic; margin-bottom: 2px;">[${mediaType}]</div>`;
             }
 
@@ -156,9 +148,7 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
         </form><br><br></body></html>`;
         
         res.send(html);
-    } catch (err) {
-        res.send("Error loading chat: " + err.message + " <br><a href='/'>Back</a>");
-    }
+    } catch (err) { res.send("Error loading chat: " + err.message + " <br><a href='/'>Back</a>"); }
 });
 
 app.post('/send', checkAuth, async (req, res) => {
