@@ -99,12 +99,12 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
         let html = `<html><head><meta name="viewport" content="width=240, initial-scale=1.0"></head>
         <body style="background:#eee;color:#000;font-family:sans-serif;margin:0;padding:0;">
         <div style="background:#25D366;color:#000;padding:5px;">
-            <a href="/" style="color:#000;text-decoration:none;"><b>[< Terug]</b></a> ${chat.name}
+            <a href="/" style="color:#000;text-decoration:none;"><b>[< Back]</b></a> ${chat.name}
         </div>
         <div style="padding:4px;">`;
         
         if (msgs.length === 0) {
-            html += `<i>Geen berichten.</i><br><br>`;
+            html += `<i>No messages.</i><br><br>`;
         }
 
         for (let m of msgs) {
@@ -128,10 +128,10 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
             let mediaHtml = '';
             if (m.hasMedia) {
                 let mediaType = "Media";
-                if (m.type === 'image') mediaType = "Afbeelding";
+                if (m.type === 'image') mediaType = "image";
                 if (m.type === 'sticker') mediaType = "Sticker";
                 if (m.type === 'video') mediaType = "Video";
-                if (m.type === 'audio' || m.type === 'ptt') mediaType = "Spraakbericht";
+                if (m.type === 'audio' || m.type === 'ptt') mediaType = "audio";
                 if (m.type === 'document') mediaType = "Document";
                 
                 mediaHtml = `<div style="font-size:11px; color:#555; font-style:italic; margin-bottom: 2px;">[${mediaType}]</div>`;
@@ -156,7 +156,7 @@ app.get('/chat/:id', checkAuth, async (req, res) => {
         
         res.send(html);
     } catch (err) {
-        res.send("Fout bij laden chat: " + err.message + " <br><a href='/'>Terug</a>");
+        res.send("Error loading chat: " + err.message + " <br><a href='/'>Back</a>");
     }
 });
 
