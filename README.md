@@ -25,6 +25,7 @@ Prerequisites
 -------------
 *   A VPS, homeserver, PC, or laptop that can run 24/7
 *   Node.js
+*   Python
 
 Configuration
 -------------
@@ -32,7 +33,8 @@ Configuration
 
 Installation & Setup
 --------------------
-
+### setup
+[![Watch the video](https://img.youtube.com/vi/djEMivwf7oo/maxresdefault.jpg)](https://www.youtube.com/watch?v=djEMivwf7oo)
 ### Windows
 
 click start.bat 
@@ -44,7 +46,7 @@ click start.sh
 
 ### Manual Setup
 
-Alternatively, you can run the Docker commands manually:
+Alternatively, you can run the commands manually:
 
 python run.py or python3 run.py
 
