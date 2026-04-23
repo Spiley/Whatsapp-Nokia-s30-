@@ -4,6 +4,7 @@ import secrets
 import getpass
 import sys
 import shutil
+import platform
 
 npm_path = shutil.which("npm")
 node_path = shutil.which("node")
@@ -11,8 +12,32 @@ node_path = shutil.which("node")
 def check_requirements():
     if not node_path or not npm_path:
         print("Error: Node.js is not installed or not in PATH.")
-        print("Please install Node.js from https://nodejs.org/")
         sys.exit(1)
+
+def install_os_dependencies():
+    if platform.system() != "Linux":
+        return
+        
+    print("Linux detected. Installing required headless libraries...")
+    
+    apt_deps = [
+        "libnss3", "libatk1.0-0", "libatk-bridge2.0-0", "libxcomposite1",
+        "libxrandr2", "libxdamage1", "libgbm1", "libasound2", "libpangocairo-1.0-0",
+        "libxss1", "libgtk-3-0"
+    ]
+    
+    if shutil.which("apt-get"):
+        try:
+            subprocess.run(["sudo", "apt-get", "update"], check=True)
+            subprocess.run(["sudo", "apt-get", "install", "-y"] + apt_deps, check=True)
+        except subprocess.CalledProcessError:
+            print("Failed to install OS dependencies. Ensure you have sudo privileges.")
+    elif shutil.which("dnf"):
+        dnf_deps = ["nss", "atk", "at-spi2-atk", "libXcomposite", "libXrandr", "libXdamage", "mesa-libgbm", "alsa-lib", "pango", "libXScrnSaver", "gtk3"]
+        subprocess.run(["sudo", "dnf", "install", "-y"] + dnf_deps, check=False)
+    elif shutil.which("pacman"):
+        pacman_deps = ["nss", "atk", "at-spi2-atk", "libxcomposite", "libxrandr", "libxdamage", "mesa", "alsa-lib", "pango", "libxss", "gtk3"]
+        subprocess.run(["sudo", "pacman", "-S", "--noconfirm"] + pacman_deps, check=False)
 
 def setup_env():
     if not os.path.exists(".env"):
@@ -25,11 +50,11 @@ def setup_env():
         print(".env configuration saved.")
 
 def install_dependencies():
-    print("Installing dependencies... (This downloads Chromium and may take a moment)")
+    print("Installing Node dependencies...")
     try:
         subprocess.run([npm_path, "install"], check=True)
     except subprocess.CalledProcessError:
-        print("Error installing Node.js dependencies. Check your internet connection.")
+        print("Error installing dependencies.")
         sys.exit(1)
 
 def start_server():
@@ -41,6 +66,7 @@ def start_server():
 
 if __name__ == "__main__":
     check_requirements()
+    install_os_dependencies()
     setup_env()
     install_dependencies()
     start_server()
