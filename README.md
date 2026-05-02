@@ -1,4 +1,4 @@
-Nokia WhatsApp Gateway
+WhatsApp Dumbphone Gateway
 ======================
 
 This project provides a WhatsApp server and gateway specifically designed for Nokia or other dumb phones that cannot run the modern WhatsApp application. It provides a lightweight web interface to interact with WhatsApp chats on older hardware.
