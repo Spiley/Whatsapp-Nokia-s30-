@@ -1,6 +1,10 @@
 {
   "name": "nokia-whatsapp-gw",
   "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js",
     "qrcode-terminal": "^0.12.0",
